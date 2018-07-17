@@ -63,23 +63,35 @@ namespace ErrorCodes
 InterpreterSelectQuery::InterpreterSelectQuery(
     const ASTPtr & query_ptr_,
     const Context & context_,
-    const Names & required_result_column_names_,
     QueryProcessingStage::Enum to_stage_,
     size_t subquery_depth_,
-    const BlockInputStreamPtr & input,
-    bool only_analyze)
+    const Names & required_result_column_names_)
     : query_ptr(query_ptr_->clone())    /// Note: the query is cloned because it will be modified during analysis.
     , query(typeid_cast<ASTSelectQuery &>(*query_ptr))
     , context(context_)
     , to_stage(to_stage_)
     , subquery_depth(subquery_depth_)
-    , only_analyze(only_analyze)
-    , input(input)
     , log(&Logger::get("InterpreterSelectQuery"))
 {
     init(required_result_column_names_);
 }
 
+InterpreterSelectQuery::InterpreterSelectQuery(
+    const ASTPtr & query_ptr_,
+    const Context & context_,
+    const BlockInputStreamPtr & input_,
+    QueryProcessingStage::Enum to_stage_,
+    bool only_analyze_)
+    : query_ptr(query_ptr_->clone())    /// Note: the query is cloned because it will be modified during analysis.
+    , query(typeid_cast<ASTSelectQuery &>(*query_ptr))
+    , context(context_)
+    , to_stage(to_stage_)
+    , only_analyze(only_analyze_)
+    , input(input_)
+    , log(&Logger::get("InterpreterSelectQuery"))
+{
+    init({});
+}
 
 InterpreterSelectQuery::InterpreterSelectQuery(OnlyAnalyzeTag, const ASTPtr & query_ptr_, const Context & context_)
     : query_ptr(query_ptr_->clone())

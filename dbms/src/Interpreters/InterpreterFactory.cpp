@@ -79,7 +79,7 @@ std::unique_ptr<IInterpreter> InterpreterFactory::get(ASTPtr & query, Context & 
     {
         /// This is internal part of ASTSelectWithUnionQuery.
         /// Even if there is SELECT without union, it is represented by ASTSelectWithUnionQuery with single ASTSelectQuery as a child.
-        return std::make_unique<InterpreterSelectQuery>(query, context, Names{}, stage);
+        return std::make_unique<InterpreterSelectQuery>(query, context, stage);
     }
     else if (typeid_cast<ASTSelectWithUnionQuery *>(query.get()))
     {

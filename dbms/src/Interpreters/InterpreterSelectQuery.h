@@ -47,11 +47,16 @@ public:
     InterpreterSelectQuery(
         const ASTPtr & query_ptr_,
         const Context & context_,
-        const Names & required_result_column_names = Names{},
         QueryProcessingStage::Enum to_stage_ = QueryProcessingStage::Complete,
         size_t subquery_depth_ = 0,
-        const BlockInputStreamPtr & input = nullptr,
-        bool only_analyze = false);
+        const Names & required_result_column_names = Names{});
+
+    InterpreterSelectQuery(
+        const ASTPtr & query_ptr_,
+        const Context & context_,
+        const BlockInputStreamPtr & input_,
+        QueryProcessingStage::Enum to_stage_ = QueryProcessingStage::Complete,
+        bool only_analyze_ = false);
 
     ~InterpreterSelectQuery() override;
 
@@ -186,7 +191,7 @@ private:
     ASTSelectQuery & query;
     Context context;
     QueryProcessingStage::Enum to_stage;
-    size_t subquery_depth;
+    size_t subquery_depth = 0;
     std::unique_ptr<ExpressionAnalyzer> query_analyzer;
 
     /// How many streams we ask for storage to produce, and in how many threads we will do further processing.
